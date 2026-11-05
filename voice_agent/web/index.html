@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vani Voice Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+      <div>
+        <h1>Vani <span class="te">వాణి</span></h1>
+        <p class="sub">Telugu &amp; English AI voice agent</p>
+      </div>
+    </div>
+    <div id="status" class="status" aria-live="polite"></div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" class="tab active" data-tab="agent">Agent</button>
+    <button role="tab" class="tab" data-tab="studio">Studio</button>
+    <button role="tab" class="tab" data-tab="sfx">Sound FX</button>
+  </nav>
+
+  <main>
+    <!-- Voice settings shared by every tab -->
+    <details class="card settings" open>
+      <summary>Voice settings</summary>
+      <div class="grid">
+        <label>Voice
+          <select id="gender"><option value="female">Female (Shruti / Neerja)</option><option value="male">Male (Mohan / Prabhat)</option></select>
+        </label>
+        <label>Language
+          <select id="language"><option value="auto">Auto-detect (mixed OK)</option><option value="te">Telugu only</option><option value="en">English only</option></select>
+        </label>
+        <label>English accent
+          <select id="accent"><option value="IN">Indian</option><option value="US">American</option><option value="GB">British</option></select>
+        </label>
+        <label>Speed <output id="rateOut">0%</output>
+          <input id="rate" type="range" min="-50" max="100" value="0">
+        </label>
+        <label>Pitch <output id="pitchOut">0Hz</output>
+          <input id="pitch" type="range" min="-50" max="50" value="0">
+        </label>
+        <label>Engine
+          <select id="provider"><option value="">Default</option><option value="edge">Neural (Edge)</option><option value="elevenlabs">ElevenLabs</option></select>
+        </label>
+      </div>
+    </details>
+
+    <!-- AGENT -->
+    <section id="tab-agent" class="panel active" role="tabpanel">
+      <div class="card chat">
+        <div id="messages" class="messages" aria-live="polite">
+          <div class="msg bot"><div class="bubble">నమస్కారం! I'm Vani. Talk to me in Telugu, English or both. <span class="hint">Tap the mic or type below.</span></div></div>
+        </div>
+        <form id="chatForm" class="composer">
+          <button type="button" id="micBtn" class="mic" title="Speak" aria-label="Speak">
+            <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2Z"/></svg>
+          </button>
+          <select id="micLang" title="Speech recognition language"><option value="te-IN">తెలుగు</option><option value="en-IN">English</option></select>
+          <input id="chatInput" autocomplete="off" placeholder="మీ సందేశం / your message…">
+          <button class="primary" type="submit">Send</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- STUDIO -->
+    <section id="tab-studio" class="panel" role="tabpanel">
+      <div class="card">
+        <div class="row between">
+          <h2>Script</h2>
+          <select id="examples"><option value="">Load an example…</option></select>
+        </div>
+        <textarea id="script" rows="9" spellcheck="false" placeholder="Type Telugu, English or both. Add [sfx:applause], [bg:rain] … [bg:off], [pause:800ms], [voice:male], [lang:te]."></textarea>
+        <div class="chips" id="tagChips"></div>
+        <div class="row">
+          <button id="speakBtn">Speak text only</button>
+          <button id="produceBtn" class="primary">Produce with effects</button>
+          <select id="format" title="Output format"><option value="mp3">MP3</option><option value="wav">WAV</option></select>
+        </div>
+      </div>
+      <div class="card" id="studioOut" hidden>
+        <audio id="studioAudio" controls></audio>
+        <div class="row"><a id="studioDl" class="btn" download>Download</a><span id="studioDur" class="muted"></span></div>
+        <div id="timeline" class="timeline"></div>
+        <ol id="segments" class="segments"></ol>
+      </div>
+    </section>
+
+    <!-- SFX -->
+    <section id="tab-sfx" class="panel" role="tabpanel">
+      <div class="card">
+        <form id="sfxForm" class="row">
+          <input id="sfxPrompt" placeholder="Describe a sound: thunder, గుడి గంట, a crowd clapping…">
+          <input id="sfxDur" type="number" min="0.2" max="30" step="0.1" placeholder="sec" title="Duration (seconds)">
+          <button class="primary" type="submit">Generate</button>
+        </form>
+        <p class="muted small" id="sfxInfo"></p>
+        <audio id="sfxAudio" controls hidden></audio>
+      </div>
+      <div id="sfxGrid"></div>
+    </section>
+  </main>
+
+  <footer>Neural voices: Shruti &amp; Mohan (Telugu), Neerja &amp; Prabhat (English) · 37 procedural sound effects · Claude-powered conversation</footer>
+  <script src="/static/app.js"></script>
+</body>
+</html>
